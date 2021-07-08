@@ -238,6 +238,7 @@ int delete(FILE *db_file, char *name) {
                 
                   free(del);
                    deleted = 1;
+		   break;
                     }
           else{     
   	while (p != NULL && (strcmp(p->name,name)!=0)) {
@@ -250,6 +251,7 @@ int delete(FILE *db_file, char *name) {
                 prev->next = del->next;
                 free(del);
                deleted = 1;
+	       break;
 	           }
 	           
   
