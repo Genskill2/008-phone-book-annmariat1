@@ -62,7 +62,11 @@ int main(int argc, char *argv[]) {
     fclose(fp);
     exit(0);
   } else if (strcmp(argv[1], "search") == 0) {  /* Handle search */
-    printf("NOT IMPLEMENTED!\n"); /* TBD  */
+    FILE *fp = open_db_file();
+    search(fp, argv[2]);
+    fclose(fp);
+    exit(0);
+  //printf("NOT IMPLEMENTED!\n"); /* TBD  */ 
   } else if (strcmp(argv[1], "delete") == 0) {  /* Handle delete */
     if (argc != 3) {
       print_usage("Improper arguments for delete", argv[0]);
@@ -92,10 +96,20 @@ FILE *open_db_file() {
   return fp;
 }
   
-void free_entries(entry *p) {
+void free_entries(entry *p) { 
+     entry *current = p;
+     entry *next;
+     while (current != NULL){
+       next = current->next;
+       free(current);
+       current = next;
+      }
+      p = NULL;
+      }
+
+   
   /* TBD */
-  printf("Memory is not being freed. This needs to be fixed!\n");  
-}
+  //printf("Memory is not being freed. This needs to be fixed!\n");  
 
 void print_usage(char *message, char *progname) {
   printf("Error : %s\n", message);
@@ -178,37 +192,67 @@ void add(char *name, char *phone) {
 void list(FILE *db_file) {
   entry *p = load_entries(db_file);
   entry *base = p;
+  int count=0;
   while (p!=NULL) {
     printf("%-20s : %10s\n", p->name, p->phone);
     p=p->next;
+    count++;
   }
+  printf("Total entries :  %d\n", count);
   /* TBD print total count */
   free_entries(base);
 }
 
+int search(FILE *db_file, char* name){
+  entry *p = load_entries(db_file);
+  entry *base = p;
+  int num = -1;
+  while (p!=NULL) {
+    if(strcmp(name, p->name)==0){
+       printf("%s\n", p->phone);
+       num = 0;
+      break;
+      }
+    p=p->next;
+    }
+    if(num==-1){
+    printf("no match\n");
+    }
+    free_entries(base);
+  
+  }
 
 int delete(FILE *db_file, char *name) {
   entry *p = load_entries(db_file);
   entry *base = p;
   entry *prev = NULL;
   entry *del = NULL ; /* Node to be deleted */
+  
   int deleted = 0;
-  while (p!=NULL) {
-    if (strcmp(p->name, name) == 0) {
-      /* Matching node found. Delete it from the linked list.
-         Deletion from a linked list like this
-   
-             p0 -> p1 -> p2
-         
-         means we have to make p0->next point directly to p2. The p1
-         "node" is removed and free'd.
-         
-         If the node to be deleted is p0, it's a special case. 
-      */
-
-      /* TBD */
-    }
-  }
+        
+                        
+    
+      if(p != NULL  && (strcmp(p->name,name)==0)){
+	         del = p;
+                 p = p->next;
+                
+                  free(del);
+                   deleted = 1;
+                    }
+          else{     
+  	while (p != NULL && (strcmp(p->name,name)!=0)) {
+			
+			prev = p;
+			del = p->next;
+				}
+		
+		
+                prev->next = del->next;
+                free(del);
+               deleted = 1;
+	           }
+	           
+  
   write_all_entries(base);
   free_entries(base);
   return deleted;
