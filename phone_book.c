@@ -230,29 +230,29 @@ int delete(FILE *db_file, char *name) {
   
   int deleted = 0;
         
-                        
-    
       if(p != NULL  && (strcmp(p->name,name)==0)){
 	         del = p;
                  p = p->next;
-                
-                  free(del);
-                   deleted = 1;
-		   break;
+                 free(del);
+                 base = p; 
+                 deleted = 1;  
                     }
-          else{     
+          else {    
   	while (p != NULL && (strcmp(p->name,name)!=0)) {
-			
 			prev = p;
-			del = p->next;
-				}
-		
-		
-                prev->next = del->next;
-                free(del);
-               deleted = 1;
-	       break;
-	           }
+			p = p->next;		
+			}
+	
+			if(p != NULL && prev->next != NULL){
+			  del = prev->next;
+                         prev->next = del->next;
+                         free(del);
+                         deleted = 1;
+                                 }
+               
+                                }
+                          
+    
 	           
   
   write_all_entries(base);
