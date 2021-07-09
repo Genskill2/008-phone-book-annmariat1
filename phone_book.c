@@ -68,14 +68,16 @@ int main(int argc, char *argv[]) {
       }/* Handle search */
     FILE *fp = open_db_file();
     char* name = argv[2];
-    search(fp, name);
-    fclose(fp);
-    exit(0);
+    //search(fp, name);
+    
     if (!search(fp, name)) {
       printf("no match\n");
       fclose(fp);
       exit(1);
     }
+      fclose(fp);
+      exit(0);
+    
   
   } else if (strcmp(argv[1], "delete") == 0) {  /* Handle delete */
     if (argc != 3) {
@@ -226,11 +228,10 @@ int search(FILE *db_file, char* name){
       }
     p=p->next;
     }
-    if(num==-1){
-    printf("no match\n");
-    search = 0;
-    }
+    
+    
     free_entries(base);
+    return search;
   
   }
 
