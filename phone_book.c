@@ -63,10 +63,15 @@ int main(int argc, char *argv[]) {
     exit(0);
   } else if (strcmp(argv[1], "search") == 0) {  /* Handle search */
     FILE *fp = open_db_file();
-    search(fp, argv[2]);
+    char* name = argv[2];
+    search(fp, name);
     fclose(fp);
     exit(0);
-  //printf("NOT IMPLEMENTED!\n"); /* TBD  */ 
+    if (!search(fp, name)) {
+      printf("no match\n");
+      fclose(fp);
+      exit(1);}
+  
   } else if (strcmp(argv[1], "delete") == 0) {  /* Handle delete */
     if (argc != 3) {
       print_usage("Improper arguments for delete", argv[0]);
@@ -74,6 +79,7 @@ int main(int argc, char *argv[]) {
     }
     FILE *fp = open_db_file();
     char *name = argv[2];
+    delete(fp, name);
     if (!delete(fp, name)) {
       printf("no match\n");
       fclose(fp);
@@ -207,6 +213,7 @@ int search(FILE *db_file, char* name){
   entry *p = load_entries(db_file);
   entry *base = p;
   int num = -1;
+  int search =1;
   while (p!=NULL) {
     if(strcmp(name, p->name)==0){
        printf("%s\n", p->phone);
@@ -217,6 +224,7 @@ int search(FILE *db_file, char* name){
     }
     if(num==-1){
     printf("no match\n");
+    search = 0;
     }
     free_entries(base);
   
@@ -229,8 +237,9 @@ int delete(FILE *db_file, char *name) {
   entry *del = NULL ; /* Node to be deleted */
   
   int deleted = 0;
-        
-      if(p != NULL  && (strcmp(p->name,name)==0)){
+       
+   
+ if(p != NULL  && (strcmp(p->name,name)==0)){
 	         del = p;
                  p = p->next;
                  free(del);
@@ -251,8 +260,12 @@ int delete(FILE *db_file, char *name) {
                                  }
                
                                 }
-                          
-    
+        
+              
+	           
+	           
+	           
+	          
 	           
   
   write_all_entries(base);
