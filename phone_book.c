@@ -61,7 +61,11 @@ int main(int argc, char *argv[]) {
     list(fp);
     fclose(fp);
     exit(0);
-  } else if (strcmp(argv[1], "search") == 0) {  /* Handle search */
+  } else if (strcmp(argv[1], "search") == 0) {   
+      if (argc != 3) {
+      print_usage("Improper arguments for search", argv[0]);
+      exit(1);
+      }/* Handle search */
     FILE *fp = open_db_file();
     char* name = argv[2];
     search(fp, name);
@@ -70,7 +74,8 @@ int main(int argc, char *argv[]) {
     if (!search(fp, name)) {
       printf("no match\n");
       fclose(fp);
-      exit(1);}
+      exit(1);
+    }
   
   } else if (strcmp(argv[1], "delete") == 0) {  /* Handle delete */
     if (argc != 3) {
@@ -79,7 +84,6 @@ int main(int argc, char *argv[]) {
     }
     FILE *fp = open_db_file();
     char *name = argv[2];
-    delete(fp, name);
     if (!delete(fp, name)) {
       printf("no match\n");
       fclose(fp);
