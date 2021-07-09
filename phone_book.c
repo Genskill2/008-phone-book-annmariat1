@@ -74,10 +74,11 @@ int main(int argc, char *argv[]) {
       printf("no match\n");
       fclose(fp);
       exit(1);
-    }
+    } else if(search(fp, name)==1){
       fclose(fp);
       exit(0);
-    
+  }
+      
   
   } else if (strcmp(argv[1], "delete") == 0) {  /* Handle delete */
     if (argc != 3) {
@@ -218,12 +219,12 @@ void list(FILE *db_file) {
 int search(FILE *db_file, char* name){
   entry *p = load_entries(db_file);
   entry *base = p;
-  int num = -1;
-  int search =1;
+
+  int search =0;
   while (p!=NULL) {
     if(strcmp(name, p->name)==0){
        printf("%s\n", p->phone);
-       num = 0;
+     search = 1;
       break;
       }
     p=p->next;
